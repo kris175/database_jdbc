@@ -1,17 +1,18 @@
-drop table if exists authors;
-drop table if exists books;
+DROP TABLE IF EXISTS "books";
+DROP TABLE IF EXISTS "authors";
 
-create table authors (
-    id bigint not null default nextval('authors_id_seq'),
-    name text,
-    age integer,
-    constraint authors_pkey primary key (id)
-)
+CREATE TABLE "authors" (
+    "id" bigint  DEFAULT nextval('authors_id_seq') NOT NULL,
+    "name" text,
+    "age" integer,
+    CONSTRAINT "authors_pkey" PRIMARY KEY ("id")
+);
 
-create table books (
-    isbn text not null,
-    title text,
-    author_id bigint,
-    constraint books_pkey primary key (isbn),
-    constraint books_author_id_fkey foreign key (author_id) references authors (id)
+CREATE TABLE "books" (
+    "isbn" text NOT NULL,
+    "title" text,
+    "author_id" bigint,
+    CONSTRAINT "books_pkey" PRIMARY KEY ("isbn"),
+    CONSTRAINT "fk_author" FOREIGN KEY(author_id)
+    REFERENCES authors(id)
 );

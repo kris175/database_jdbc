@@ -1,5 +1,6 @@
 package com.dev.hari.database_jdbc.dao.impl;
 
+import com.dev.hari.database_jdbc.TestDataUtil;
 import com.dev.hari.database_jdbc.domain.Author;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +24,7 @@ public class AuthorDaoImplTests {
 
     @Test
     public void testThatCreateAuthorGeneratesCorrectSql() {
-        Author author = Author.builder()
-                .id(1L)
-                .name("John")
-                .age(20)
-                .build();
+        Author author = TestDataUtil.createTestAuthor();
         underTest.create(author);
 
         verify(jdbcTemplate)
