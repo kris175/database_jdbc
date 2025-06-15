@@ -1,6 +1,7 @@
-package com.dev.hari.database_jdbc.dao.impl;
+package com.dev.hari.database_jdbc.dao.impl.unitTests;
 
 import com.dev.hari.database_jdbc.TestDataUtil;
+import com.dev.hari.database_jdbc.dao.impl.BookDaoImpl;
 import com.dev.hari.database_jdbc.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,6 +47,17 @@ public class BookDaoImplTests {
                         eq("SELECT isbn, title, author_id FROM books WHERE isbn = ? LIMIT 1"),
                         ArgumentMatchers.<BookDaoImpl.BookRowMapper>any(),
                         eq(isbn)
+                );
+    }
+
+    @Test
+    public void testThatFindAllGeneratesCorrectSql() {
+        underTest.findAll();
+
+        verify(jdbcTemplate)
+                .query(
+                        eq("SELECT isbn, title, author_id FROM books"),
+                        ArgumentMatchers.<BookDaoImpl.BookRowMapper>any()
                 );
     }
 }

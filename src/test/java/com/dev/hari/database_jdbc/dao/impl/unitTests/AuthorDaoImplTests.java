@@ -1,6 +1,7 @@
-package com.dev.hari.database_jdbc.dao.impl;
+package com.dev.hari.database_jdbc.dao.impl.unitTests;
 
 import com.dev.hari.database_jdbc.TestDataUtil;
+import com.dev.hari.database_jdbc.dao.impl.AuthorDaoImpl;
 import com.dev.hari.database_jdbc.domain.Author;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,4 +50,14 @@ public class AuthorDaoImplTests {
                 );
     }
 
+    @Test
+    public void testThatFindAllGeneratesCorrectSql() {
+        underTest.findAll();
+
+        verify(jdbcTemplate)
+                .query(
+                        eq("SELECT id, name, age FROM authors"),
+                        ArgumentMatchers.<AuthorDaoImpl.AuthorRowMapper>any()
+                );
+    }
 }

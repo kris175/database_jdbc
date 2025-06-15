@@ -16,11 +16,10 @@ public final class TestDataUtil {
     }
 
     public static Book getTestBook() {
-        Book book = Book.builder()
+        return Book.builder()
                 .isbn("978-3-16-148410-0")
                 .title("Effective Java")
                 .authorId(1L)
                 .build();
-        return book;
     }
 }
