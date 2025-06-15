@@ -1,9 +1,9 @@
-package com.dev.hari.database_jdbc.dao;
+package com.dev.hari.database_jdbc.dao.impl;
 
-import com.dev.hari.database_jdbc.dao.impl.BookDaoImpl;
 import com.dev.hari.database_jdbc.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,6 +36,19 @@ public class BookDaoImplTests {
                         eq("978-3-16-148410-0"),
                         eq("Effective Java"),
                         eq(1L)
+                );
+    }
+
+    @Test
+    public void testThatFindOneGeneratesCorrectSql() {
+        String isbn = "978-3-16-148410-0";
+        underTest.findOne(isbn);
+
+        verify(jdbcTemplate)
+                .query(
+                        eq("SELECT isbn, title, author_id FROM books WHERE isbn = ? LIMIT 1"),
+                        ArgumentMatchers.<BookDaoImpl.BookRowMapper>any(),
+                        eq(isbn)
                 );
     }
 }
