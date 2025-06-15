@@ -59,6 +59,14 @@ public class AuthorDaoImpl implements AuthorDao {
         );
     }
 
+    @Override
+    public void delete(Long authorId) {
+        jdbcTemplate.update(
+                "DELETE FROM authors WHERE id = ?",
+                authorId
+        );
+    }
+
     public static class AuthorRowMapper implements RowMapper<Author> {
         @Override
         public Author mapRow(ResultSet rs, int rowNum) throws SQLException {
