@@ -46,4 +46,19 @@ public class AuthorDaoImplIntegrationTests {
 
         assertThat(underTest.findAll()).containsExactlyInAnyOrder(author1, author2);
     }
+
+    @Test
+    public void testThatAuthorCanBeUpdated() {
+        Author author = TestDataUtil.createTestAuthor();
+        underTest.create(author);
+
+        author.setName("Updated Name");
+        author.setAge(30);
+        underTest.update(1L, author);
+
+        Optional<Author> updatedAuthor = underTest.findOne(author.getId());
+        assertThat(updatedAuthor).isPresent();
+        assertThat(updatedAuthor.get().getName()).isEqualTo("Updated Name");
+        assertThat(updatedAuthor.get().getAge()).isEqualTo(30);
+    }
 }
