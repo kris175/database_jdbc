@@ -1,5 +1,6 @@
 package com.dev.hari.database_jdbc.dao.impl;
 
+import com.dev.hari.database_jdbc.TestDataUtil;
 import com.dev.hari.database_jdbc.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +24,7 @@ public class BookDaoImplTests {
 
     @Test
     public void testThatCreateBookGeneratesCorrectSql() {
-        Book book = Book.builder()
-                .isbn("978-3-16-148410-0")
-                .title("Effective Java")
-                .authorId(1L)
-                .build();
+        Book book = TestDataUtil.getTestBook();
         underTest.create(book);
 
         verify(jdbcTemplate)
