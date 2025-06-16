@@ -1,51 +1,50 @@
-//package com.dev.hari.database_jdbc.repository;
-//
-//import com.dev.hari.database_jdbc.TestDataUtil;
-//import com.dev.hari.database_jdbc.dao.AuthorDao;
-//import com.dev.hari.database_jdbc.dao.impl.BookDaoImpl;
-//import com.dev.hari.database_jdbc.domain.Author;
-//import com.dev.hari.database_jdbc.domain.Book;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.test.annotation.DirtiesContext;
-//import org.springframework.test.context.junit.jupiter.SpringExtension;
-//
-//import java.util.Optional;
-//
-//import static org.assertj.core.api.Assertions.assertThat;
-//
-//@SpringBootTest
-//@ExtendWith(SpringExtension.class)
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-//public class BookDaoImplIntegrationTests {
-//
-//    private final AuthorDao authorDao;
-//
-//    private final BookDaoImpl underTest;
-//
-//    @Autowired
-//    public BookDaoImplIntegrationTests(BookDaoImpl underTest, AuthorDao authorDao) {
-//        this.underTest = underTest;
-//        this.authorDao = authorDao;
-//    }
-//
-//    @Test
-//    public void testThatBookCanBeCreatedAndRetrieved() {
-//
-//        Author author = TestDataUtil.createTestAuthor();
-//        authorDao.create(author);
-//
-//        Book book = TestDataUtil.getTestBook();
-//        book.setAuthorId(author.getId());
-//
-//        underTest.create(book);
-//        Optional<Book> result = underTest.findOne(book.getIsbn());
-//        assertThat(result).isPresent();
-//        assertThat(result.get()).isEqualTo(book);
-//    }
-//
+package com.dev.hari.database_jdbc.repository;
+
+import com.dev.hari.database_jdbc.TestDataUtil;
+import com.dev.hari.database_jdbc.domain.Author;
+import com.dev.hari.database_jdbc.domain.Book;
+import com.dev.hari.database_jdbc.repositories.AuthorRepository;
+import com.dev.hari.database_jdbc.repositories.BookRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class BookRepositoryIntegrationTests {
+
+    private final AuthorRepository authorDao;
+
+    private final BookRepository underTest;
+
+    @Autowired
+    public BookRepositoryIntegrationTests(BookRepository underTest, AuthorRepository authorDao) {
+        this.underTest = underTest;
+        this.authorDao = authorDao;
+    }
+
+    @Test
+    public void testThatBookCanBeCreatedAndRetrieved() {
+
+        Author author = TestDataUtil.createTestAuthor();
+        authorDao.save(author);
+
+        Book book = TestDataUtil.getTestBook(author, "978-3-16-148410-0", "Effective Java");
+
+        underTest.save(book);
+        Optional<Book> result = underTest.findById(book.getIsbn());
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(book);
+    }
+
 //    @Test
 //    public void testThatMultipleBooksCanBeCreatedAndRetrieved() {
 //        Author author = TestDataUtil.createTestAuthor();
@@ -65,7 +64,7 @@
 //        assertThat(underTest.findOne(book1.getIsbn())).isPresent().get().isEqualTo(book1);
 //        assertThat(underTest.findOne(book2.getIsbn())).isPresent().get().isEqualTo(book2);
 //    }
-//
+
 //    @Test
 //    public void testThatBookCanBeUpdated() {
 //        Author author = TestDataUtil.createTestAuthor();
@@ -86,7 +85,7 @@
 //        assertThat(result).isPresent();
 //        assertThat(result.get().getTitle()).isEqualTo("Updated Title");
 //    }
-//
+
 //    @Test
 //    public void testThatBookCanBeDeleted() {
 //        Author author = TestDataUtil.createTestAuthor();
@@ -101,4 +100,4 @@
 //        Optional<Book> result = underTest.findOne(book.getIsbn());
 //        assertThat(result).isNotPresent();
 //    }
-//}
+}

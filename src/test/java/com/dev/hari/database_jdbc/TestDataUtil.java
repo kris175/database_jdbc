@@ -9,17 +9,16 @@ public final class TestDataUtil {
 
     public static Author createTestAuthor() {
         return Author.builder()
-                .id(1L)
                 .name("John")
                 .age(20)
                 .build();
     }
 
-    public static Book getTestBook() {
+    public static Book getTestBook(Author author, String isbn, String title) {
         return Book.builder()
-                .isbn("978-3-16-148410-0")
-                .title("Effective Java")
-                .authorId(1L)
+                .isbn(isbn)
+                .title(title)
+                .author(author)
                 .build();
     }
 }
