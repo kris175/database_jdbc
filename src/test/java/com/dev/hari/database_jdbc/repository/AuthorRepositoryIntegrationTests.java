@@ -28,25 +28,24 @@ public class AuthorRepositoryIntegrationTests {
 
     @Test
     public void testThatAuthorCanBeCreatedAndRetrieved() {
-        Author author = TestDataUtil.createTestAuthor();
+        Author author = TestDataUtil.createTestAuthor("John Doe", 45);
         underTest.save(author);
         Optional<Author> result = underTest.findById(author.getId());
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(author);
     }
 
-//
-//    @Test
-//    public void testThatMultipleAuthorsCanBeCreatedAndRetrieved() {
-//        Author author1 = TestDataUtil.createTestAuthor();
-//        Author author2 = TestDataUtil.createTestAuthor();
-//        author2.setId(2L); // Ensure different ID for the second author
-//
-//        underTest.create(author1);
-//        underTest.create(author2);
-//
-//        assertThat(underTest.findAll()).containsExactlyInAnyOrder(author1, author2);
-//    }
+
+    @Test
+    public void testThatMultipleAuthorsCanBeCreatedAndRetrieved() {
+        Author author1 = TestDataUtil.createTestAuthor("Author One", 25);
+        Author author2 = TestDataUtil.createTestAuthor("Author Two", 60);// Ensure different ID for the second author
+
+        underTest.save(author1);
+        underTest.save(author2);
+
+        assertThat(underTest.findAll()).containsExactlyInAnyOrder(author1, author2);
+    }
 //
 //    @Test
 //    public void testThatAuthorCanBeUpdated() {

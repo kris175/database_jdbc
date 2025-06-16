@@ -34,7 +34,7 @@ public class BookRepositoryIntegrationTests {
     @Test
     public void testThatBookCanBeCreatedAndRetrieved() {
 
-        Author author = TestDataUtil.createTestAuthor();
+        Author author = TestDataUtil.createTestAuthor("John Doe", 45);
         authorDao.save(author);
 
         Book book = TestDataUtil.getTestBook(author, "978-3-16-148410-0", "Effective Java");
@@ -45,25 +45,21 @@ public class BookRepositoryIntegrationTests {
         assertThat(result.get()).isEqualTo(book);
     }
 
-//    @Test
-//    public void testThatMultipleBooksCanBeCreatedAndRetrieved() {
-//        Author author = TestDataUtil.createTestAuthor();
-//        authorDao.create(author);
-//
-//        Book book1 = TestDataUtil.getTestBook();
-//        book1.setAuthorId(author.getId());
-//        underTest.create(book1);
-//
-//        Book book2 = TestDataUtil.getTestBook();
-//        book2.setIsbn("978-3-16-148410-1");
-//        book2.setTitle("Effective Java 2nd Edition");
-//        book2.setAuthorId(author.getId());
-//        underTest.create(book2);
-//
-//        assertThat(underTest.findAll()).hasSize(2);
-//        assertThat(underTest.findOne(book1.getIsbn())).isPresent().get().isEqualTo(book1);
-//        assertThat(underTest.findOne(book2.getIsbn())).isPresent().get().isEqualTo(book2);
-//    }
+    @Test
+    public void testThatMultipleBooksCanBeCreatedAndRetrieved() {
+        Author author = TestDataUtil.createTestAuthor("Jane Smith", 30);
+        authorDao.save(author);
+
+        Book book1 = TestDataUtil.getTestBook(author, "978-3-16-148410-0", "Effective Java 1st Edition");
+        underTest.save(book1);
+
+        Book book2 = TestDataUtil.getTestBook(author, "978-3-16-148410-1", "Effective Java 2nd Edition");
+        underTest.save(book2);
+
+        assertThat(underTest.findAll()).hasSize(2);
+        assertThat(underTest.findById(book1.getIsbn())).isPresent().get().isEqualTo(book1);
+        assertThat(underTest.findById(book2.getIsbn())).isPresent().get().isEqualTo(book2);
+    }
 
 //    @Test
 //    public void testThatBookCanBeUpdated() {

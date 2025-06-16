@@ -7,10 +7,10 @@ public final class TestDataUtil {
     private TestDataUtil() {}
 
 
-    public static Author createTestAuthor() {
+    public static Author createTestAuthor(String name, int age) {
         return Author.builder()
-                .name("John")
-                .age(20)
+                .name(name)
+                .age(age)
                 .build();
     }
 
