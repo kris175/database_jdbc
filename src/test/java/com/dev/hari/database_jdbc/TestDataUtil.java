@@ -1,5 +1,7 @@
 package com.dev.hari.database_jdbc;
 
+import com.dev.hari.database_jdbc.domain.dto.AuthorDto;
+import com.dev.hari.database_jdbc.domain.dto.BookDto;
 import com.dev.hari.database_jdbc.domain.entities.AuthorEntity;
 import com.dev.hari.database_jdbc.domain.entities.BookEntity;
 
@@ -14,8 +16,16 @@ public final class TestDataUtil {
                 .build();
     }
 
-    public static BookEntity getTestBook(AuthorEntity author, String isbn, String title) {
+    public static BookEntity getTestBookEntity(AuthorEntity author, String isbn, String title) {
         return BookEntity.builder()
+                .isbn(isbn)
+                .title(title)
+                .author(author)
+                .build();
+    }
+
+    public static BookDto getTestBookDto(AuthorDto author, String isbn, String title) {
+        return BookDto.builder()
                 .isbn(isbn)
                 .title(title)
                 .author(author)
