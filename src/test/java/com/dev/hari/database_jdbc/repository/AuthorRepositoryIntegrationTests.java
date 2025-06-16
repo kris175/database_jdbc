@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Iterator;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,5 +86,19 @@ public class AuthorRepositoryIntegrationTests {
         Iterable<Author> results = underTest.findAuthorByAgeLessThan(36);
 
         assertThat(results).containsExactlyInAnyOrder(author1, author2);
+    }
+
+    @Test
+    public void testThatGetAuthorsWithAgeGreaterThan() {
+        Author author1 = TestDataUtil.createTestAuthor("Alice", 25);
+        Author author2 = TestDataUtil.createTestAuthor("Bob", 35);
+        Author author3 = TestDataUtil.createTestAuthor("Charlie", 45);
+
+        underTest.save(author1);
+        underTest.save(author2);
+        underTest.save(author3);
+
+        Iterable<Author> results = underTest.findAuthorsWithAgeGreaterThan(36);
+        assertThat(results).containsExactly(author3);
     }
 }
