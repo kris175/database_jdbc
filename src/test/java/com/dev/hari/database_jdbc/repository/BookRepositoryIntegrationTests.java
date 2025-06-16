@@ -61,39 +61,34 @@ public class BookRepositoryIntegrationTests {
         assertThat(underTest.findById(book2.getIsbn())).isPresent().get().isEqualTo(book2);
     }
 
-//    @Test
-//    public void testThatBookCanBeUpdated() {
-//        Author author = TestDataUtil.createTestAuthor();
-//        authorDao.create(author);
-//
-//        Book book = TestDataUtil.getTestBook();
-//        book.setAuthorId(author.getId());
-//        underTest.create(book);
-//
-//        Book updatedBook = new Book();
-//        updatedBook.setIsbn(book.getIsbn());
-//        updatedBook.setTitle("Updated Title");
-//        updatedBook.setAuthorId(author.getId());
-//
-//        underTest.update(book.getIsbn(), updatedBook);
-//
-//        Optional<Book> result = underTest.findOne(book.getIsbn());
-//        assertThat(result).isPresent();
-//        assertThat(result.get().getTitle()).isEqualTo("Updated Title");
-//    }
+    @Test
+    public void testThatBookCanBeUpdated() {
+        Author author = TestDataUtil.createTestAuthor("John Doe", 45);
+        authorDao.save(author);
 
-//    @Test
-//    public void testThatBookCanBeDeleted() {
-//        Author author = TestDataUtil.createTestAuthor();
-//        authorDao.create(author);
-//
-//        Book book = TestDataUtil.getTestBook();
-//        book.setAuthorId(author.getId());
-//        underTest.create(book);
-//
-//        underTest.delete(book.getIsbn());
-//
-//        Optional<Book> result = underTest.findOne(book.getIsbn());
-//        assertThat(result).isNotPresent();
-//    }
+        Book book = TestDataUtil.getTestBook(author, "978-3-16-148410-0", "Original Title");
+        underTest.save(book);
+
+        book.setTitle("Updated Title");
+
+        underTest.save(book);
+
+        Optional<Book> result = underTest.findById(book.getIsbn());
+        assertThat(result).isPresent();
+        assertThat(result.get().getTitle()).isEqualTo("Updated Title");
+    }
+
+    @Test
+    public void testThatBookCanBeDeleted() {
+        Author author = TestDataUtil.createTestAuthor("John Doe", 45);
+        authorDao.save(author);
+
+        Book book = TestDataUtil.getTestBook(author, "978-3-16-148410-0", "Book to be deleted");
+        underTest.save(book);
+
+        underTest.delete(book);
+
+        Optional<Book> result = underTest.findById(book.getIsbn());
+        assertThat(result).isNotPresent();
+    }
 }

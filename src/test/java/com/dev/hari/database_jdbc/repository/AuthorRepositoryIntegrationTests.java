@@ -46,30 +46,30 @@ public class AuthorRepositoryIntegrationTests {
 
         assertThat(underTest.findAll()).containsExactlyInAnyOrder(author1, author2);
     }
-//
-//    @Test
-//    public void testThatAuthorCanBeUpdated() {
-//        Author author = TestDataUtil.createTestAuthor();
-//        underTest.create(author);
-//
-//        author.setName("Updated Name");
-//        author.setAge(30);
-//        underTest.update(1L, author);
-//
-//        Optional<Author> updatedAuthor = underTest.findOne(author.getId());
-//        assertThat(updatedAuthor).isPresent();
-//        assertThat(updatedAuthor.get().getName()).isEqualTo("Updated Name");
-//        assertThat(updatedAuthor.get().getAge()).isEqualTo(30);
-//    }
-//
-//    @Test
-//    public void testThatAuthorCanBeDeleted() {
-//        Author author = TestDataUtil.createTestAuthor();
-//        underTest.create(author);
-//
-//        underTest.delete(author.getId());
-//
-//        Optional<Author> deletedAuthor = underTest.findOne(author.getId());
-//        assertThat(deletedAuthor).isNotPresent();
-//    }
+
+    @Test
+    public void testThatAuthorCanBeUpdated() {
+        Author author = TestDataUtil.createTestAuthor("Jane Smith", 30);
+        underTest.save(author);
+
+        author.setName("John Doe");
+        author.setAge(40);
+        underTest.save(author);
+
+        Optional<Author> updatedAuthor = underTest.findById(author.getId());
+        assertThat(updatedAuthor).isPresent();
+        assertThat(updatedAuthor.get().getName()).isEqualTo(author.getName());
+        assertThat(updatedAuthor.get().getAge()).isEqualTo(author.getAge());
+    }
+
+    @Test
+    public void testThatAuthorCanBeDeleted() {
+        Author author = TestDataUtil.createTestAuthor("Mark Twain", 60);
+        underTest.save(author);
+
+        underTest.delete(author);
+
+        Optional<Author> deletedAuthor = underTest.findById(author.getId());
+        assertThat(deletedAuthor).isNotPresent();
+    }
 }
