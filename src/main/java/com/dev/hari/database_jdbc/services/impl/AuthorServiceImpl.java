@@ -6,6 +6,7 @@ import com.dev.hari.database_jdbc.services.AuthorService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -28,5 +29,10 @@ public class AuthorServiceImpl implements AuthorService {
         return StreamSupport
                 .stream(authorRepository.findAll().spliterator(), false)
                 .toList();
+    }
+
+    @Override
+    public Optional<AuthorEntity> findById(Long id) {
+        return authorRepository.findById(id);
     }
 }
