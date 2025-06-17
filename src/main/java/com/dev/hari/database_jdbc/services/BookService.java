@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookService {
-    public BookEntity createBook(String isbn, BookEntity book);
+    public BookEntity save(String isbn, BookEntity book);
 
     List<BookEntity> findAll();
 
     Optional<BookEntity> findByIsbn(String isbn);
+
+    boolean doesExists(String isbn);
+
+    BookEntity updateBook(BookEntity bookEntity);
 }

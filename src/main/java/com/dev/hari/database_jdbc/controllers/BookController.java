@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,16 +30,6 @@ public class BookController {
         this.bookMapper = bookMapper;
     }
 
-    @PostMapping("/{isbn}")
-    public ResponseEntity<BookDto> createBook(
-            @RequestBody BookDto book,
-            @PathVariable String isbn) {
-        BookEntity bookEntity = bookMapper.mapFrom(book);
-        BookEntity savedBookEntity = bookService.createBook(isbn, bookEntity);
-        BookDto savedBookDto = bookMapper.mapTo(savedBookEntity);
-        return new ResponseEntity<>(savedBookDto, HttpStatus.CREATED);
-    }
-
     @GetMapping("/")
     public List<BookDto> getAllBooks() {
         List<BookEntity> bookEntities = bookService.findAll();
@@ -54,5 +45,28 @@ public class BookController {
             BookDto bookDto = bookMapper.mapTo(bookEntity);
             return new ResponseEntity<>(bookDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/{isbn}")
+    public ResponseEntity<BookDto> createBook(
+            @RequestBody BookDto book,
+            @PathVariable String isbn) {
+        BookEntity bookEntity = bookMapper.mapFrom(book);
+        BookEntity savedBookEntity = bookService.save(isbn, bookEntity);
+        BookDto savedBookDto = bookMapper.mapTo(savedBookEntity);
+        return new ResponseEntity<>(savedBookDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{isbn}")
+    public ResponseEntity<BookDto> updateBook(
+            @PathVariable String isbn,
+            @RequestBody BookDto book) {
+        if (!bookService.doesExists(isbn)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        BookEntity bookEntity = bookMapper.mapFrom(book);
+        BookEntity updatedBookEntity = bookService.updateBook(bookEntity);
+        BookDto updatedBookDto = bookMapper.mapTo(updatedBookEntity);
+        return new ResponseEntity<>(updatedBookDto, HttpStatus.OK);
     }
 }

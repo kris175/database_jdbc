@@ -4,7 +4,6 @@ import com.dev.hari.database_jdbc.TestDataUtil;
 import com.dev.hari.database_jdbc.domain.dto.BookDto;
 import com.dev.hari.database_jdbc.domain.entities.BookEntity;
 import com.dev.hari.database_jdbc.services.BookService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,7 +69,7 @@ public class BookControllerIntegrationTests {
     public void testThatGetAllBooksEndpointWorks() throws Exception {
         BookEntity book1 = TestDataUtil.getTestBookEntity(null, "978-3-16-148410-0", "Effective Java 1st Edition");
 
-        bookService.createBook(book1.getIsbn(), book1);
+        bookService.save(book1.getIsbn(), book1);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/books/")
@@ -86,7 +85,7 @@ public class BookControllerIntegrationTests {
     public void testThatGetBookWithIsbnEndpointWorks() throws Exception {
         BookEntity book1 = TestDataUtil.getTestBookEntity(null, "978-3-16-148410-0", "Effective Java 1st Edition");
 
-        bookService.createBook(book1.getIsbn(), book1);
+        bookService.save(book1.getIsbn(), book1);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/books/" + book1.getIsbn())
@@ -97,6 +96,40 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.isbn").value("978-3-16-148410-0")
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.title").value("Effective Java 1st Edition")
+        );
+    }
+
+    @Test
+    public void testThatFullUpdateBookReturns404WhenNoBooksExists() throws Exception {
+        BookDto book = TestDataUtil.getTestBookDto(null, "978-3-16-148410-0", "Effective Java");
+        String bookJson = objectMapper.writeValueAsString(book);
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/books/" + book.getIsbn())
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testThatFullUpdateBookReturnsUpdatedBook() throws Exception {
+        BookEntity book1 = TestDataUtil.getTestBookEntity(null, "978-3-16-148410-0", "Effective Java 1st Edition");
+        bookService.save(book1.getIsbn(), book1);
+
+        BookDto updatedBook = TestDataUtil.getTestBookDto(null, book1.getIsbn(), "Effective Java 2nd Edition");
+        String bookJson = objectMapper.writeValueAsString(updatedBook);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/books/" + updatedBook.getIsbn())
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.isbn").value("978-3-16-148410-0")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value("Effective Java 2nd Edition")
         );
     }
 }
