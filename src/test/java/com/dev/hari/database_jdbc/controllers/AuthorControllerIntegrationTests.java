@@ -75,7 +75,7 @@ public class AuthorControllerIntegrationTests {
     @Test
     public void testThatGetAllAuthorsEndpointWorks() throws Exception {
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/authors")
+                MockMvcRequestBuilders.get("/authors/")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
@@ -89,7 +89,7 @@ public class AuthorControllerIntegrationTests {
         authorService.createAuthor(testAuthor1);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/authors")
+                MockMvcRequestBuilders.get("/authors/")
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.[0].id").isNumber()
