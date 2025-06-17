@@ -4,6 +4,8 @@ import com.dev.hari.database_jdbc.domain.dto.BookDto;
 import com.dev.hari.database_jdbc.domain.entities.BookEntity;
 import com.dev.hari.database_jdbc.mappers.Mapper;
 import com.dev.hari.database_jdbc.services.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,11 +35,9 @@ public class BookController {
     }
 
     @GetMapping("/")
-    public List<BookDto> getAllBooks() {
-        List<BookEntity> bookEntities = bookService.findAll();
-        return bookEntities.stream()
-                .map(bookMapper::mapTo)
-                .toList();
+    public Page<BookDto> getAllBooks(Pageable pageable) {
+        Page<BookEntity> books = bookService.findAll(pageable);
+        return books.map(bookMapper::mapTo);
     }
 
     @GetMapping("/{isbn}")
