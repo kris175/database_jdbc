@@ -74,7 +74,6 @@ public class AuthorController {
         if(!authorService.doesExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        author.setId(id);
         AuthorEntity authorEntity = authorMapper.mapFrom(author);
         AuthorEntity updatedAuthorEntity = authorService.partialUpdate(id, authorEntity);
         AuthorDto updatedAuthorDto = authorMapper.mapTo(updatedAuthorEntity);

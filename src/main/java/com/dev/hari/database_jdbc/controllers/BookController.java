@@ -7,6 +7,7 @@ import com.dev.hari.database_jdbc.services.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -68,5 +69,18 @@ public class BookController {
         BookEntity updatedBookEntity = bookService.updateBook(bookEntity);
         BookDto updatedBookDto = bookMapper.mapTo(updatedBookEntity);
         return new ResponseEntity<>(updatedBookDto, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{isbn}")
+    public ResponseEntity<BookDto> patchBook(
+            @PathVariable String isbn,
+            @RequestBody BookDto book) {
+        if (!bookService.doesExists(isbn)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        BookEntity bookEntity = bookMapper.mapFrom(book);
+        BookEntity patchedBookEntity = bookService.patchBook(isbn, bookEntity);
+        BookDto patchedBookDto = bookMapper.mapTo(patchedBookEntity);
+        return new ResponseEntity<>(patchedBookDto, HttpStatus.OK);
     }
 }

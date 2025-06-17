@@ -132,4 +132,25 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.title").value("Effective Java 2nd Edition")
         );
     }
+
+    @Test
+    public void testThatPartialUpdateBookReturnsUpdatedBook() throws Exception {
+        BookEntity book1 = TestDataUtil.getTestBookEntity(null, "978-3-16-148410-0", "Effective Java 1st Edition");
+        bookService.save(book1.getIsbn(), book1);
+
+        BookDto updatedBook = TestDataUtil.getTestBookDto(null, book1.getIsbn(), "Effective Java 2nd Edition");
+        String bookJson = objectMapper.writeValueAsString(updatedBook);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/books/" + updatedBook.getIsbn())
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content(bookJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.isbn").value("978-3-16-148410-0")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value("Effective Java 2nd Edition")
+        );
+    }
 }
