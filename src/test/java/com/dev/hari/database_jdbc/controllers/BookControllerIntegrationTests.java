@@ -75,9 +75,9 @@ public class BookControllerIntegrationTests {
                 MockMvcRequestBuilders.get("/books/")
                         .accept(org.springframework.http.MediaType.APPLICATION_JSON)
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.[0].isbn").value("978-3-16-148410-0")
+                MockMvcResultMatchers.jsonPath("$.content.[0].isbn").value("978-3-16-148410-0")
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.[0].title").value("Effective Java 1st Edition")
+                MockMvcResultMatchers.jsonPath("$.content.[0].title").value("Effective Java 1st Edition")
         );
     }
 
