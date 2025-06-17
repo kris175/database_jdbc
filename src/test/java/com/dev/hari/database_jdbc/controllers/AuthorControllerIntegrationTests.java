@@ -85,10 +85,8 @@ public class AuthorControllerIntegrationTests {
     @Test
     public void testThatGetAllAuthorsEndpointReturnsListOfAuthors() throws Exception {
         AuthorEntity testAuthor1 = TestDataUtil.createTestAuthor("John Doe", 35);
-//        AuthorEntity testAuthor2 = TestDataUtil.createTestAuthor("Jane Smith", 30);
 
         authorService.createAuthor(testAuthor1);
-//        authorService.createAuthor(testAuthor2);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/authors")
