@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DatabaseJdbcApplication {
+public class BooksApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DatabaseJdbcApplication.class, args);
+        SpringApplication.run(BooksApiApplication.class, args);
     }
 
 }

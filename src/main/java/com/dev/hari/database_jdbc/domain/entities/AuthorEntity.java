@@ -1,4 +1,4 @@
-package com.dev.hari.database_jdbc.domain;
+package com.dev.hari.database_jdbc.domain.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "authors")
-public class Author {
+public class AuthorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "author_id_seq")
@@ -24,6 +24,6 @@ public class Author {
 
     private String name;
 
-    private int age;
+    private Integer age;
 
 }

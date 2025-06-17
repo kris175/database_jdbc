@@ -1,8 +1,8 @@
 package com.dev.hari.database_jdbc.repository;
 
 import com.dev.hari.database_jdbc.TestDataUtil;
-import com.dev.hari.database_jdbc.domain.Author;
-import com.dev.hari.database_jdbc.domain.Book;
+import com.dev.hari.database_jdbc.domain.entities.AuthorEntity;
+import com.dev.hari.database_jdbc.domain.entities.BookEntity;
 import com.dev.hari.database_jdbc.repositories.AuthorRepository;
 import com.dev.hari.database_jdbc.repositories.BookRepository;
 import org.junit.jupiter.api.Test;
@@ -19,14 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class BookRepositoryIntegrationTests {
+public class BookEntityRepositoryIntegrationTests {
 
     private final AuthorRepository authorDao;
 
     private final BookRepository underTest;
 
     @Autowired
-    public BookRepositoryIntegrationTests(BookRepository underTest, AuthorRepository authorDao) {
+    public BookEntityRepositoryIntegrationTests(BookRepository underTest, AuthorRepository authorDao) {
         this.underTest = underTest;
         this.authorDao = authorDao;
     }
@@ -34,26 +34,26 @@ public class BookRepositoryIntegrationTests {
     @Test
     public void testThatBookCanBeCreatedAndRetrieved() {
 
-        Author author = TestDataUtil.createTestAuthor("John Doe", 45);
+        AuthorEntity author = TestDataUtil.createTestAuthor("John Doe", 45);
         authorDao.save(author);
 
-        Book book = TestDataUtil.getTestBook(author, "978-3-16-148410-0", "Effective Java");
+        BookEntity book = TestDataUtil.getTestBookEntity(author, "978-3-16-148410-0", "Effective Java");
 
         underTest.save(book);
-        Optional<Book> result = underTest.findById(book.getIsbn());
+        Optional<BookEntity> result = underTest.findById(book.getIsbn());
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(book);
     }
 
     @Test
     public void testThatMultipleBooksCanBeCreatedAndRetrieved() {
-        Author author = TestDataUtil.createTestAuthor("Jane Smith", 30);
+        AuthorEntity author = TestDataUtil.createTestAuthor("Jane Smith", 30);
         authorDao.save(author);
 
-        Book book1 = TestDataUtil.getTestBook(author, "978-3-16-148410-0", "Effective Java 1st Edition");
+        BookEntity book1 = TestDataUtil.getTestBookEntity(author, "978-3-16-148410-0", "Effective Java 1st Edition");
         underTest.save(book1);
 
-        Book book2 = TestDataUtil.getTestBook(author, "978-3-16-148410-1", "Effective Java 2nd Edition");
+        BookEntity book2 = TestDataUtil.getTestBookEntity(author, "978-3-16-148410-1", "Effective Java 2nd Edition");
         underTest.save(book2);
 
         assertThat(underTest.findAll()).hasSize(2);
@@ -63,32 +63,32 @@ public class BookRepositoryIntegrationTests {
 
     @Test
     public void testThatBookCanBeUpdated() {
-        Author author = TestDataUtil.createTestAuthor("John Doe", 45);
+        AuthorEntity author = TestDataUtil.createTestAuthor("John Doe", 45);
         authorDao.save(author);
 
-        Book book = TestDataUtil.getTestBook(author, "978-3-16-148410-0", "Original Title");
+        BookEntity book = TestDataUtil.getTestBookEntity(author, "978-3-16-148410-0", "Original Title");
         underTest.save(book);
 
         book.setTitle("Updated Title");
 
         underTest.save(book);
 
-        Optional<Book> result = underTest.findById(book.getIsbn());
+        Optional<BookEntity> result = underTest.findById(book.getIsbn());
         assertThat(result).isPresent();
         assertThat(result.get().getTitle()).isEqualTo("Updated Title");
     }
 
     @Test
     public void testThatBookCanBeDeleted() {
-        Author author = TestDataUtil.createTestAuthor("John Doe", 45);
+        AuthorEntity author = TestDataUtil.createTestAuthor("John Doe", 45);
         authorDao.save(author);
 
-        Book book = TestDataUtil.getTestBook(author, "978-3-16-148410-0", "Book to be deleted");
+        BookEntity book = TestDataUtil.getTestBookEntity(author, "978-3-16-148410-0", "Book to be deleted");
         underTest.save(book);
 
         underTest.delete(book);
 
-        Optional<Book> result = underTest.findById(book.getIsbn());
+        Optional<BookEntity> result = underTest.findById(book.getIsbn());
         assertThat(result).isNotPresent();
     }
 }
