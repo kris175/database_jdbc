@@ -153,4 +153,23 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.title").value("Effective Java 2nd Edition")
         );
     }
+
+    @Test
+    public void testThatDeleteBookByIsbnWorks() throws Exception {
+        BookEntity book1 = TestDataUtil.getTestBookEntity(null, "978-3-16-148410-0", "Effective Java 1st Edition");
+        bookService.save(book1.getIsbn(), book1);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/books/" + book1.getIsbn())
+        ).andExpect(
+                MockMvcResultMatchers.status().isNoContent()
+        );
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books/" + book1.getIsbn())
+                        .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
 }

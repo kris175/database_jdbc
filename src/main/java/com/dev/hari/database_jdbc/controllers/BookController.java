@@ -6,6 +6,7 @@ import com.dev.hari.database_jdbc.mappers.Mapper;
 import com.dev.hari.database_jdbc.services.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,5 +83,14 @@ public class BookController {
         BookEntity patchedBookEntity = bookService.patchBook(isbn, bookEntity);
         BookDto patchedBookDto = bookMapper.mapTo(patchedBookEntity);
         return new ResponseEntity<>(patchedBookDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{isbn}")
+    public ResponseEntity<Void> deleteBook(@PathVariable String isbn) {
+        if (!bookService.doesExists(isbn)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        bookService.deleteByIsbn(isbn);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
