@@ -46,8 +46,11 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}")
-    public AuthorDto getAuthorById(@PathVariable Long id) {
+    public ResponseEntity<AuthorDto> getAuthorById(@PathVariable Long id) {
         Optional<AuthorEntity> authorEntity = authorService.findById(id);
-        return authorEntity.map(authorMapper::mapTo).orElse(null);
+        return authorEntity.map(authorEntity1 -> {
+                        AuthorDto authorDto = authorMapper.mapTo(authorEntity1);
+                        return new ResponseEntity<>(authorMapper.mapTo(authorEntity1), HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
