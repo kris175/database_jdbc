@@ -29,14 +29,6 @@ public class AuthorController {
         this.authorMapper = authorMapper;
     }
 
-    @PostMapping("/")
-    public ResponseEntity<AuthorDto> createAuthor(@RequestBody AuthorDto author) {
-        AuthorEntity authorEntity = authorMapper.mapFrom(author);
-        AuthorEntity savedAuthorEntity = authorService.createAuthor(authorEntity);
-        AuthorDto savedAuthorDto = authorMapper.mapTo(savedAuthorEntity);
-        return new ResponseEntity<>(savedAuthorDto, HttpStatus.CREATED);
-    }
-
     @GetMapping("/")
     public List<AuthorDto> getAllAuthors() {
         List<AuthorEntity> authorEntities = authorService.findAll();
@@ -52,5 +44,13 @@ public class AuthorController {
                         AuthorDto authorDto = authorMapper.mapTo(authorEntity1);
                         return new ResponseEntity<>(authorDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<AuthorDto> createAuthor(@RequestBody AuthorDto author) {
+        AuthorEntity authorEntity = authorMapper.mapFrom(author);
+        AuthorEntity savedAuthorEntity = authorService.createAuthor(authorEntity);
+        AuthorDto savedAuthorDto = authorMapper.mapTo(savedAuthorEntity);
+        return new ResponseEntity<>(savedAuthorDto, HttpStatus.CREATED);
     }
 }
