@@ -35,7 +35,7 @@ public class AuthorController {
         return new ResponseEntity<>(savedAuthorDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("")
+    @GetMapping("/")
     public List<AuthorDto> getAllAuthors() {
         List<AuthorEntity> authorEntities = authorService.findAll();
         return authorEntities.stream()

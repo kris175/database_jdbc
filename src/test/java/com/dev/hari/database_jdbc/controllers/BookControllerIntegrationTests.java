@@ -2,6 +2,8 @@ package com.dev.hari.database_jdbc.controllers;
 
 import com.dev.hari.database_jdbc.TestDataUtil;
 import com.dev.hari.database_jdbc.domain.dto.BookDto;
+import com.dev.hari.database_jdbc.domain.entities.BookEntity;
+import com.dev.hari.database_jdbc.services.BookService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -21,14 +23,17 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureMockMvc
 public class BookControllerIntegrationTests {
 
+    private BookService bookService;
+
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper;
 
     @Autowired
-    public BookControllerIntegrationTests(MockMvc mockMvc, ObjectMapper objectMapper) {
+    public BookControllerIntegrationTests(MockMvc mockMvc, ObjectMapper objectMapper, BookService bookService) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
+        this.bookService = bookService;
     }
 
     @Test
@@ -58,6 +63,22 @@ public class BookControllerIntegrationTests {
         ).andExpect(
                 MockMvcResultMatchers
                         .jsonPath("$.title").value("Effective Java")
+        );
+    }
+
+    @Test
+    public void testThatGetAllBooksEndpointWorks() throws Exception {
+        BookEntity book1 = TestDataUtil.getTestBookEntity(null, "978-3-16-148410-0", "Effective Java 1st Edition");
+
+        bookService.createBook(book1.getIsbn(), book1);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books/")
+                        .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.[0].isbn").value("978-3-16-148410-0")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.[0].title").value("Effective Java 1st Edition")
         );
     }
 }
