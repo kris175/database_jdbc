@@ -7,6 +7,7 @@ import com.dev.hari.database_jdbc.services.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,5 +79,14 @@ public class AuthorController {
         AuthorEntity updatedAuthorEntity = authorService.partialUpdate(id, authorEntity);
         AuthorDto updatedAuthorDto = authorMapper.mapTo(updatedAuthorEntity);
         return new ResponseEntity<>(updatedAuthorDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAuthor(@PathVariable Long id) {
+        if(!authorService.doesExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        authorService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

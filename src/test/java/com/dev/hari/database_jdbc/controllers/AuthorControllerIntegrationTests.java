@@ -175,4 +175,24 @@ public class AuthorControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.age").value(30) // Age should remain unchanged
         );
     }
+
+    @Test
+    public void testThatDeleteAuthorEndpointWorks() throws Exception {
+        AuthorEntity testAuthor = TestDataUtil.createTestAuthor("John Doe", 45);
+        AuthorEntity savedAuthor = authorService.save(testAuthor);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/authors/" + savedAuthor.getId())
+        ).andExpect(
+                MockMvcResultMatchers.status().isNoContent()
+        );
+
+        // Verify that the author is deleted
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/authors/" + savedAuthor.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
 }
