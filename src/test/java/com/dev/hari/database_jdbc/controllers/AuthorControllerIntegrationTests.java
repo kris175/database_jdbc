@@ -3,7 +3,6 @@ package com.dev.hari.database_jdbc.controllers;
 import com.dev.hari.database_jdbc.TestDataUtil;
 import com.dev.hari.database_jdbc.domain.entities.AuthorEntity;
 import com.dev.hari.database_jdbc.services.AuthorService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -86,7 +84,7 @@ public class AuthorControllerIntegrationTests {
     public void testThatGetAllAuthorsEndpointReturnsListOfAuthors() throws Exception {
         AuthorEntity testAuthor1 = TestDataUtil.createTestAuthor("John Doe", 35);
 
-        authorService.createAuthor(testAuthor1);
+        authorService.save(testAuthor1);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/authors/")
@@ -103,7 +101,7 @@ public class AuthorControllerIntegrationTests {
     @Test
     public void testThatGetAuthorWithIdEndpointWorks() throws Exception {
         AuthorEntity testAuthor = TestDataUtil.createTestAuthor("Jane Doe", 30);
-        AuthorEntity savedAuthor = authorService.createAuthor(testAuthor);
+        AuthorEntity savedAuthor = authorService.save(testAuthor);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/authors/" + savedAuthor.getId())
@@ -114,6 +112,22 @@ public class AuthorControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.name").value(savedAuthor.getName())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.age").value(savedAuthor.getAge())
+        );
+    }
+
+    @Test
+    public void testThatFullUpdateAuthorReturns404WhenNoAuthorsExists() throws Exception {
+        AuthorEntity testAuthor = TestDataUtil.createTestAuthor("Jane Doe", 30);
+        authorService.save(testAuthor);
+        testAuthor.setId(999L); // Assuming this ID does not exist
+        String authorJson = objectMapper.writeValueAsString(testAuthor);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/authors/" + testAuthor.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
         );
     }
 }
