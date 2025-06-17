@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -64,6 +65,18 @@ public class AuthorController {
         author.setId(id);
         AuthorEntity authorEntity = authorMapper.mapFrom(author);
         AuthorEntity updatedAuthorEntity = authorService.save(authorEntity);
+        AuthorDto updatedAuthorDto = authorMapper.mapTo(updatedAuthorEntity);
+        return new ResponseEntity<>(updatedAuthorDto, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<AuthorDto> patchAuthor(@PathVariable Long id, @RequestBody AuthorDto author) {
+        if(!authorService.doesExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        author.setId(id);
+        AuthorEntity authorEntity = authorMapper.mapFrom(author);
+        AuthorEntity updatedAuthorEntity = authorService.partialUpdate(id, authorEntity);
         AuthorDto updatedAuthorDto = authorMapper.mapTo(updatedAuthorEntity);
         return new ResponseEntity<>(updatedAuthorDto, HttpStatus.OK);
     }
