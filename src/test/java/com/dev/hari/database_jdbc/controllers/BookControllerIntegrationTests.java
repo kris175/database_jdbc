@@ -81,4 +81,22 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.[0].title").value("Effective Java 1st Edition")
         );
     }
+
+    @Test
+    public void testThatGetBookWithIsbnEndpointWorks() throws Exception {
+        BookEntity book1 = TestDataUtil.getTestBookEntity(null, "978-3-16-148410-0", "Effective Java 1st Edition");
+
+        bookService.createBook(book1.getIsbn(), book1);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books/" + book1.getIsbn())
+                        .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.isbn").value("978-3-16-148410-0")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.title").value("Effective Java 1st Edition")
+        );
+    }
 }

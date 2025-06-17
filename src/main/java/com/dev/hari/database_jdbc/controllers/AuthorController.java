@@ -50,7 +50,7 @@ public class AuthorController {
         Optional<AuthorEntity> authorEntity = authorService.findById(id);
         return authorEntity.map(authorEntity1 -> {
                         AuthorDto authorDto = authorMapper.mapTo(authorEntity1);
-                        return new ResponseEntity<>(authorMapper.mapTo(authorEntity1), HttpStatus.OK);
+                        return new ResponseEntity<>(authorDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
